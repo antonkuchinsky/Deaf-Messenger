@@ -1,0 +1,11 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/who_users_db
+    username: admin
+    password: root
+

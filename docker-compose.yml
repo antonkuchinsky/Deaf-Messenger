@@ -1,9 +1,26 @@
+version: "3.9"
 services:
   zipkin:
     container_name: zipkin
     image: openzipkin/zipkin
     ports:
       - "9411:9411"
+
+
+  postgres_users:
+    image: postgres:15.3
+    container_name: who_users_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=who_users_db
+    volumes:
+      - postgres_users:/data/postgres_users
+      - ./create_who_users_db.sql:/docker-entrypoint-initdb.d/create_who_users_db.sql
+    restart: always
+
 
   discovery-service:
     container_name: discovery-service
@@ -25,3 +42,23 @@ services:
     depends_on:
       - discovery-service
       - zipkin
+
+
+#  users-service:
+#    container_name: users-service
+#    build:
+#      context: ./users-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8070:8070"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    depends_on:
+#      - discovery-service
+#      - gateway-service
+#      - zipkin
+
+
+
+volumes:
+  postgres_users:

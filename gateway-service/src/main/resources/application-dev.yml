@@ -3,10 +3,11 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka
 
-#spring:
-#  cloud:
-#    gateway:
-#      routes:
-#        - id:
-#          uri:
-#          predicates:
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: users-service
+          uri: http://127.0.0.1:8070
+          predicates:
+            - Path=/api/v1/users/**

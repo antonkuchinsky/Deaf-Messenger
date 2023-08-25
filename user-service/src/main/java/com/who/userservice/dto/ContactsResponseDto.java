@@ -5,7 +5,7 @@ import com.who.userservice.entity.ContactCategory;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-public record ContactsDto (
+public record ContactsResponseDto(
         UUID contactsId,
         String contactsName,
         Boolean isActive,

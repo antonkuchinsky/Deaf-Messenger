@@ -24,6 +24,8 @@ public class Contact {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User contact;
 
+    private String contactName;
+
     private Boolean isBlocked;
 
     @Enumerated(EnumType.STRING)

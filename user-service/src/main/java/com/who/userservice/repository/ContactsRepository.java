@@ -27,4 +27,6 @@ public interface ContactsRepository extends CrudRepository<Contact, UUID> {
                                           @Param("contactID") UUID contactID);
 
 
+
+
 }

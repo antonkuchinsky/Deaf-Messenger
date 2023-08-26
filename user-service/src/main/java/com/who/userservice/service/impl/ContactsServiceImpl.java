@@ -7,7 +7,6 @@ import com.who.userservice.exception.InvalidDataException;
 import com.who.userservice.mapper.ContactMapperDto;
 import com.who.userservice.repository.ContactsRepository;
 import com.who.userservice.service.ContactsService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +32,8 @@ public class ContactsServiceImpl implements ContactsService {
                 .toList();
     }
 
-    @Override
-    @Transactional
-    public ContactsResponseDto saveContact(Contact contact) {
-        return Optional.of(contactsRepository.save(contact))
+    public ContactsResponseDto updateContact(Contact contact) {
+        return Optional.of(contact)
                 .map(contactMapperDto).orElseThrow();
     }
 
@@ -56,23 +53,32 @@ public class ContactsServiceImpl implements ContactsService {
 
     @Override
     @Transactional
-    public ContactsResponseDto updateContactCategory(@NotNull Contact contact, ContactCategory contactCategory) {
+    public ContactsResponseDto updateContactCategory(UUID userId, UUID contactId, ContactCategory contactCategory) {
+        var contact = findContactByContactIdAndUserId(userId, contactId);
         contact.setContactCategory(contactCategory);
-        return saveContact(contact);
+        return updateContact(contact);
     }
 
     @Override
     @Transactional
-    public ContactsResponseDto blockOrUnblockContact(@NotNull Contact contact, Boolean isBlocked) {
+    public ContactsResponseDto blockOrUnblockContact(UUID userId, UUID contactId, Boolean isBlocked) {
+        var contact = findContactByContactIdAndUserId(userId, contactId);
         contact.setIsBlocked(isBlocked);
-        return saveContact(contact);
+        return updateContact(contact);
     }
 
     @Override
     @Transactional
-    public ContactsResponseDto updateContactName(@NotNull Contact contact, String name) {
+    public ContactsResponseDto updateContactName(UUID userId, UUID contactId, String name) {
+        var contact = findContactByContactIdAndUserId(userId, contactId);
         contact.setContactName(name);
-        return saveContact(contact);
+        return updateContact(contact);
+    }
+
+    @Override
+    @Transactional
+    public void deleteContact(UUID userId, UUID contactId) {
+        contactsRepository.deleteContactByIdAndUserId(userId, contactId);
     }
 
 }

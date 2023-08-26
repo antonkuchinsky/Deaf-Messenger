@@ -17,8 +17,8 @@ create table if not exists contact
     contact_category text,
     contact_name text,
     primary key (id),
-    constraint user_id FOREIGN KEY (user_id) REFERENCES _user (id) on DELETE cascade,
-    constraint contact_id FOREIGN KEY (contact_id) REFERENCES _user (id)
+    constraint user_id FOREIGN KEY (user_id) REFERENCES _user (id),
+    constraint contact_id FOREIGN KEY (contact_id) REFERENCES _user (id) on DELETE cascade
 
 );
 
@@ -38,7 +38,7 @@ VALUES
 
 INSERT INTO contact (id, user_id, contact_id, is_blocked, contact_category, contact_name)
 VALUES
-    ('7374d8c9-33a7-4f6f-9eaa-3bce4b4aa92f','007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', '007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', false, 'FRIEND', 'User 1'),
+    ('7374d8c9-33a7-4f6f-9eaa-3bce4b4aa92f','007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', '27aad666-106a-4b84-8b32-dc5609458bad', false, 'FRIEND', 'User 1'),
     ('44d08433-f8fd-4e35-85b3-18765e15504e','007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', 'efc4bdca-c291-4457-be28-1febf3a20311', false, 'COLLEAGUE', 'User 2'),
     ('f496a091-861b-42de-8677-6832cfe75cb8','007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', '160eda73-8faf-4df5-9e0f-6dce9b9c8834', false, 'FAMILY', 'User 3'),
     ('a940c9ef-6c45-4872-86db-3680e244801d','007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', '9ac00353-707c-4a76-85a1-e046ac7364a4', false, 'NONE', 'User 4'),
@@ -47,5 +47,4 @@ VALUES
     ('0cd28dcf-1a9a-446a-afc4-1c7c6beee390','007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', 'a28533f7-824b-475c-aa11-ea6f415893aa', false, 'FAMILY', 'User 7'),
     ('866e2585-ab22-4135-8282-412a0654ff1f','007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', '9b0eab66-eb37-4572-bf1c-256927d9c84b', false, 'NONE', 'User 8'),
     ('3de77048-08b8-476e-a8c8-672335d893b9','007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', '00fe52e4-046f-4083-b89f-16bdd3a00e66', false, 'FRIEND', 'User 9'),
-    ('230172ea-8de8-4283-9ed3-4d72a4b4ead2','007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', '424ccb46-b87a-4586-a476-cb7fba70a3b3', false, 'COLLEAGUE', 'User 10'),
-    ('8a03d702-833f-4705-af24-53e633ca4e50','007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', '27aad666-106a-4b84-8b32-dc5609458bad', false, 'NONE', 'User 11');
+    ('230172ea-8de8-4283-9ed3-4d72a4b4ead2','007d1ca2-5f94-40d9-a0e1-5d5f8d022aba', '424ccb46-b87a-4586-a476-cb7fba70a3b3', false, 'COLLEAGUE', 'User 10');

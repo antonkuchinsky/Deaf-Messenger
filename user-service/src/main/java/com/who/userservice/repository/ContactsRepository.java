@@ -3,6 +3,7 @@ package com.who.userservice.repository;
 import com.who.userservice.entity.Contact;
 import com.who.userservice.entity.ContactCategory;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -25,8 +26,9 @@ public interface ContactsRepository extends CrudRepository<Contact, UUID> {
     @EntityGraph(type = EntityGraph.EntityGraphType.FETCH, attributePaths = "contact")
     Optional<Contact> getContactsByUserID(@Param("userID") UUID userID,
                                           @Param("contactID") UUID contactID);
-
-
-
+    @Modifying
+    @Query("delete from Contact c where c.user.id = :userID and c.contact.id = :contactID")
+    void deleteContactByIdAndUserId(@Param("userID") UUID userID,
+                                    @Param("contactID") UUID contactID);
 
 }

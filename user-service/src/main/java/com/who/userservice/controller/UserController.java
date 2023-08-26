@@ -8,6 +8,7 @@ import com.who.userservice.service.ContactsService;
 import com.who.userservice.service.UserService;
 import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class UserController {
 
     @PatchMapping("/{user_id}")
     public User updateUsername(@PathVariable("user_id") UUID id,
-                               @RequestBody @NotNull ContactsRequestDto contactsRequestDto) {
+                               @RequestBody @NotNull @Valid ContactsRequestDto contactsRequestDto) {
         var user = userService.getUserById(id);
         return userService.updateUsername(user, contactsRequestDto.username());
     }
@@ -50,28 +51,32 @@ public class UserController {
         return contactsService.getContactByContactIdAndUserId(userId, contactId);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{user_id}/contacts/{contact_id}")
+    public void deleteContact(@PathVariable("user_id") UUID userId,
+                              @PathVariable("contact_id") UUID contactId) {
+        contactsService.deleteContact(userId, contactId);
+    }
+
     @PatchMapping("/{user_id}/contacts/{contact_id}/category/edit")
     public ContactsResponseDto updateContactCategory(@PathVariable("user_id") UUID userId,
                                                      @PathVariable("contact_id") UUID contactId,
                                                      @RequestBody @NotNull @Valid ContactsRequestDto contactsRequestDto) {
-        var contact = contactsService.findContactByContactIdAndUserId(userId, contactId);
-        return contactsService.updateContactCategory(contact, contactsRequestDto.contactCategory());
+        return contactsService.updateContactCategory(userId,contactId, contactsRequestDto.contactCategory());
     }
 
     @PatchMapping("/{user_id}/contacts/{contact_id}/name/edit")
     public ContactsResponseDto updateContactName(@PathVariable("user_id") UUID userId,
                                                  @PathVariable("contact_id") UUID contactId,
                                                  @RequestBody @NotNull @Valid ContactsRequestDto contactsRequestDto) {
-        var contact = contactsService.findContactByContactIdAndUserId(userId, contactId);
-        return contactsService.updateContactName(contact, contactsRequestDto.username());
+        return contactsService.updateContactName(userId,contactId, contactsRequestDto.username());
     }
 
     @PatchMapping("/{user_id}/contacts/{contact_id}/block")
     public ContactsResponseDto updateContactsBlock(@PathVariable("user_id") UUID userId,
                                                    @PathVariable("contact_id") UUID contactId,
                                                    @RequestBody @NotNull @Valid ContactsRequestDto contactsRequestDto) {
-        var contact = contactsService.findContactByContactIdAndUserId(userId, contactId);
-        return contactsService.blockOrUnblockContact(contact, contactsRequestDto.isBlocked());
+        return contactsService.blockOrUnblockContact(userId,contactId, contactsRequestDto.isBlocked());
     }
 
 

@@ -13,10 +13,10 @@ public interface ContactsService {
     List<ContactsResponseDto> getAllContacts(UUID userId, Boolean isBlocked, ContactCategory contactCategory);
     Contact findContactByContactIdAndUserId(UUID userId, UUID contactId);
     ContactsResponseDto getContactByContactIdAndUserId(UUID userId, UUID contactId);
-    ContactsResponseDto updateContactCategory(Contact contact, ContactCategory contactCategory);
-    ContactsResponseDto blockOrUnblockContact(Contact contact, Boolean isBlocked);
-    ContactsResponseDto updateContactName(Contact contact, String name);
-    ContactsResponseDto saveContact(Contact contact);
-
+    ContactsResponseDto updateContactCategory(UUID userId, UUID contactId, ContactCategory contactCategory);
+    ContactsResponseDto blockOrUnblockContact(UUID userId, UUID contactId, Boolean isBlocked);
+    ContactsResponseDto updateContactName(UUID userId, UUID contactId, String name);
+    ContactsResponseDto updateContact(Contact contact);
+    void deleteContact(UUID userId, UUID contactId);
 
 }

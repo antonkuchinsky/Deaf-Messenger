@@ -17,6 +17,8 @@ public class User {
     @Column(unique = true)
     private String username;
 
+    private String bio;
+
     private Boolean isActive;
 
     private ZonedDateTime lastActive;

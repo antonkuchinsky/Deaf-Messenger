@@ -16,12 +16,12 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
     @JsonIgnore
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "contact_id")
+    @JsonIgnore
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User contact;
 

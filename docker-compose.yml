@@ -6,12 +6,11 @@ services:
     ports:
       - "9411:9411"
 
-
   postgres_users:
     image: postgres:15.3
     container_name: who_users_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=root
@@ -19,6 +18,20 @@ services:
     volumes:
       - postgres_users:/data/postgres_users
       - ./create_who_users_db.sql:/docker-entrypoint-initdb.d/create_who_users_db.sql
+    restart: always
+
+  postgres_message:
+    image: postgres:15.3
+    container_name: who_message_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=who_message_db
+    volumes:
+      - postgres_users:/data/postgres_users
+      - ./create_who_message_db.sql:/docker-entrypoint-initdb.d/create_who_message_db.sql
     restart: always
 
 
@@ -44,7 +57,7 @@ services:
       - zipkin
 
 
-#  users-service:
+#  user-service:
 #    container_name: users-service
 #    build:
 #      context: ./users-service
@@ -62,3 +75,4 @@ services:
 
 volumes:
   postgres_users:
+  postgres_message:

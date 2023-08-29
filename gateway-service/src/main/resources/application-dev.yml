@@ -7,7 +7,12 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: users-service
+        - id: user-service
           uri: http://127.0.0.1:8070
           predicates:
-            - Path=/api/v1/users/**
+            - Path=/api/v1/user/**
+        - id: message-service
+          uri: http://127.0.0.1:8071
+          predicates:
+            - Path=/api/v1/message/**
+

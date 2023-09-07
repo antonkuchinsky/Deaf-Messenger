@@ -28,6 +28,7 @@ public class MessageServiceImpl implements MessageService {
         message.setSenderId(senderId);
         message.setTextMessage(messageDto.text());
         message.setDateTimeSendingMessage(ZonedDateTime.now());
+        message.setRecipients(chat.getCommunity());
         chatService.updateChatMessages(chat,message);
         return messageRepository.save(message);
     }

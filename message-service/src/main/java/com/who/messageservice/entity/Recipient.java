@@ -9,12 +9,11 @@ import java.util.UUID;
 @Entity
 @Table(name = "recipient")
 public class Recipient {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     private UUID recipientId;
+    private String name;
 
 
 }

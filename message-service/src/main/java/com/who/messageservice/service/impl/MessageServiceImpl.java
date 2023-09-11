@@ -4,35 +4,39 @@ import com.who.messageservice.dto.MessageDto;
 import com.who.messageservice.entity.Chat;
 import com.who.messageservice.entity.Message;
 import com.who.messageservice.exception.InvalidDataException;
+import com.who.messageservice.repository.ChatRepository;
 import com.who.messageservice.repository.MessageRepository;
-import com.who.messageservice.service.ChatService;
 import com.who.messageservice.service.MessageService;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
+
 import java.util.UUID;
 
 @Service
 public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
-    private final ChatService chatService;
+    private final ChatRepository chatRepository;
 
-    public MessageServiceImpl(MessageRepository messageRepository, ChatService chatService) {
+    public MessageServiceImpl(MessageRepository messageRepository, ChatRepository chatRepository) {
         this.messageRepository = messageRepository;
-        this.chatService = chatService;
+        this.chatRepository = chatRepository;
     }
+
 
     @Override
-    public Message createMessage(MessageDto messageDto, Chat chat, UUID senderId) {
-        var message=new Message();
-        message.setSenderId(senderId);
-        message.setTextMessage(messageDto.text());
-        message.setDateTimeSendingMessage(ZonedDateTime.now());
-        message.setRecipients(chat.getCommunity());
-        chatService.updateChatMessages(chat,message);
+    public Message sendMessage(Message message) {
+        UUID chatId = message.getChatId();
+        Chat chat = chatRepository.findById(chatId).orElse(null);
+
+        if (chat == null) {
+            chat = Chat.builder()
+                    .nameChat("Chat " + chatId)
+                    .community(message.getRecipients())
+                    .build();
+            chatRepository.save(chat);
+        }
         return messageRepository.save(message);
     }
-
 
     @Override
     public Message getMessageById(UUID messageId) {

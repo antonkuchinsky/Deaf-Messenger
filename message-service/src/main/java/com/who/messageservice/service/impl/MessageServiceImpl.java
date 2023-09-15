@@ -4,58 +4,47 @@ import com.who.messageservice.dto.MessageDto;
 import com.who.messageservice.entity.Chat;
 import com.who.messageservice.entity.Message;
 import com.who.messageservice.exception.InvalidDataException;
+import com.who.messageservice.mapper.MessageMapperDto;
 import com.who.messageservice.repository.ChatRepository;
 import com.who.messageservice.repository.MessageRepository;
 import com.who.messageservice.service.MessageService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
     private final ChatRepository chatRepository;
+    private final MessageMapperDto messageMapperDto;
+    private final int MAX_PAGABLE_MESSAGES = 100;
 
-    public MessageServiceImpl(MessageRepository messageRepository, ChatRepository chatRepository) {
+    public MessageServiceImpl(MessageRepository messageRepository, ChatRepository chatRepository, MessageMapperDto messageMapperDto) {
         this.messageRepository = messageRepository;
         this.chatRepository = chatRepository;
+        this.messageMapperDto = messageMapperDto;
     }
 
 
     @Override
-    public Message sendMessage(Message message) {
-        UUID chatId = message.getChatId();
-        Chat chat = chatRepository.findById(chatId).orElse(null);
-
-        if (chat == null) {
-            chat = Chat.builder()
-                    .nameChat("Chat " + chatId)
-                    .community(message.getRecipients())
-                    .build();
-            chatRepository.save(chat);
-        }
-        return messageRepository.save(message);
+    public void sendMessage(MessageDto messageDto) {
+        messageRepository.save(messageMapperDto.apply(messageDto));
+        //implement ChatNotification
     }
 
     @Override
-    public Message getMessageById(UUID messageId) {
-        return messageRepository.findById(messageId)
-                .orElseThrow(()-> new InvalidDataException("This message not found",
-                        "Message not found"));
+    public List<Message> getExistingChatMessages(UUID chatId) {
+        var chat=chatRepository.findById(chatId);
+        List<Message> chatMessages =
+                messageRepository.getExistingChatMessages(
+                        chat.get().getUserIdOne(),
+                        chat.get().getUserIdTwo(),
+                        PageRequest.of(0,MAX_PAGABLE_MESSAGES)
+                );
+        return chatMessages;
     }
 
-
-
-    @Override
-    public Message updateMessage(UUID messageId, MessageDto messageDto) {
-        var message=messageRepository.findById(messageId);
-        message.get().setTextMessage(messageDto.text());
-        return messageRepository.save(message.get());
-    }
-
-    @Override
-    public void deleteMessage(UUID messageId) {
-        messageRepository.deleteById(messageId);
-    }
 }

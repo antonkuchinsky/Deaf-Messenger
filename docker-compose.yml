@@ -30,7 +30,7 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=who_message_db
     volumes:
-      - postgres_users:/data/postgres_users
+      - postgres_message:/data/postgres_message
       - ./create_who_message_db.sql:/docker-entrypoint-initdb.d/create_who_message_db.sql
     restart: always
 

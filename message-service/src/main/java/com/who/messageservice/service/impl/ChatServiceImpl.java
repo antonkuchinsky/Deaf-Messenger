@@ -1,14 +1,12 @@
 package com.who.messageservice.service.impl;
 
-import com.who.messageservice.dto.ChatDto;
+import com.who.messageservice.dto.ChatInitializationDTO;
 import com.who.messageservice.entity.Chat;
-import com.who.messageservice.exception.InvalidDataException;
 import com.who.messageservice.repository.ChatRepository;
 import com.who.messageservice.service.ChatService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ChatServiceImpl implements ChatService {
@@ -20,29 +18,23 @@ public class ChatServiceImpl implements ChatService {
 
 
     @Override
-    public Chat createGroupChat(ChatDto chatDto) {
-        var chat= Chat.builder()
-                .nameChat(chatDto.nameChat())
-                .community(chatDto.recipients())
+    public Chat getExistingChannel(ChatInitializationDTO chatInitializationDTO) {
+        List<Chat> chats = chatRepository.findExistingChannel(chatInitializationDTO.userIdOne(), chatInitializationDTO.userIdTwo());
+        return (chats != null && !chats.isEmpty()) ? chats.get(0) : null;
+    }
+
+    @Override
+    public Chat newChatSession(ChatInitializationDTO chatInitializationDTO) {
+        var chat = Chat.builder()
+                .userIdOne(chatInitializationDTO.userIdOne())
+                .userIdTwo(chatInitializationDTO.userIdTwo())
                 .build();
         return chatRepository.save(chat);
     }
 
     @Override
-    public Chat getChatById(UUID chatId) {
-        return chatRepository.findById(chatId).
-                orElseThrow(() -> new InvalidDataException("This chat not exist",
-                        "Chat not found"));
-    }
-
-    @Override
-    public List<Chat> getAllChatById(UUID userId) {
-        return chatRepository.findChatsByRecipientId(userId);
-    }
-
-
-    @Override
-    public void deleteChat(UUID chatId) {
-        chatRepository.deleteById(chatId);
+    public Chat establishChatSession(ChatInitializationDTO chatInitializationDTO) {
+        var chat = getExistingChannel(chatInitializationDTO);
+        return (chat != null) ? chat : newChatSession(chatInitializationDTO);
     }
 }

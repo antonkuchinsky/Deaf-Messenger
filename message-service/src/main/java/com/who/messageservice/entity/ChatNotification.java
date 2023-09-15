@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class ChatNotification {
-    private String id;
+    private UUID chatId;
     private UUID senderId;
     private String senderName;
 }

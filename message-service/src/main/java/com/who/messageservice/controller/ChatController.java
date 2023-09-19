@@ -12,13 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@Controller
+@RestController
+@RequestMapping("/api/v1/private-chat")
 public class ChatController {
     private final MessageService messageService;
     private final ChatService chatService;
@@ -28,20 +28,20 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @MessageMapping("/private.chat.{chatId}")
-    @SendTo("/topic/private.chat.{chatId}")
+    @MessageMapping("/chat.{chatId}")
+    @SendTo("/topic/chat.{chatId}")
     public MessageDto sendMessage(@DestinationVariable UUID chatId,
                                MessageDto message){
         messageService.sendMessage(message);
         return message;
     }
-    @RequestMapping(value="/api/v1/private-chat/chat", method=RequestMethod.PUT, produces="application/json", consumes="application/json")
+    @PutMapping("/chat")
     public ResponseEntity<String> establishChatChannel(@RequestBody ChatInitializationDTO chatInitialization){
         var chat = chatService.establishChatSession(chatInitialization);
         ChatDto chatDto=new ChatDto(chat.getId(),chat.getUserIdOne(),chat.getUserIdTwo());
         return JSONResponseHelper.createResponse(chatDto, HttpStatus.OK);
     }
-    @RequestMapping(value="/api/v1/private-chat/chat/{chatId}", method=RequestMethod.GET, produces="application/json")
+    @GetMapping("/chat/{chatId}")
     public ResponseEntity<String> getExistingChatMessages(@PathVariable("chatId") UUID chatId) {
         List<Message> messages=messageService.getExistingChatMessages(chatId);
         return JSONResponseHelper.createResponse(messages, HttpStatus.OK);

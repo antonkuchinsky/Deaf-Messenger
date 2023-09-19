@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Tester</title>
+</head>
+<body>
+<input type="text" id="messageInput" placeholder="Enter message" />
+<button onclick="sendMessage()">Send</button>
+
+<ul id="messageList"></ul>
+
+<script>
+    var chatId = getChatIdFromUrl();
+
+    var socket = new WebSocket("ws://localhost:8080/ws/private.chat." + chatId);
+
+    socket.onopen = function() {
+        console.log("WebSocket connection opened");
+    };
+
+    socket.onmessage = function(event) {
+        var message = event.data;
+        console.log("Received message: " + message);
+        displayMessage(message);
+    };
+
+    socket.onclose = function() {
+        console.log("WebSocket connection closed");
+    };
+
+    function sendMessage() {
+        var messageInput = document.getElementById("messageInput");
+        var message = messageInput.value;
+        socket.send(message);
+        messageInput.value = "";
+    }
+
+    function displayMessage(message) {
+        var messageList = document.getElementById("messageList");
+        var li = document.createElement("li");
+        li.textContent = message;
+        messageList.appendChild(li);
+    }
+
+    function getChatIdFromUrl() {
+        var url = window.location.href;
+        var urlParts = url.split("/");
+        var chatId = urlParts[urlParts.length - 1];
+        return chatId;
+    }
+</script>
+</body>
+</html>

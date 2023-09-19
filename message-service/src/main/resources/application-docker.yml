@@ -5,7 +5,7 @@ eureka:
 
 spring:
   datasource:
-    url: jdbc:postgresql://users_db:5432/who_message_db
+    url: jdbc:postgresql://message_db:5432/who_message_db
     username: admin
     password: root
 

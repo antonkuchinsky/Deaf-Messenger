@@ -4,18 +4,21 @@ import com.who.messageservice.dto.ChatDto;
 import com.who.messageservice.dto.ChatInitializationDTO;
 import com.who.messageservice.dto.MessageDto;
 import com.who.messageservice.entity.Message;
+import com.who.messageservice.http.JSONResponseHelper;
 import com.who.messageservice.service.ChatService;
 import com.who.messageservice.service.MessageService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping(value="/api/v1/message")
-@RestController
+@Controller
 public class ChatController {
     private final MessageService messageService;
     private final ChatService chatService;
@@ -32,15 +35,16 @@ public class ChatController {
         messageService.sendMessage(message);
         return message;
     }
-    @PutMapping("/private-chat")
-    public ChatDto establishChatChannel(@RequestBody ChatInitializationDTO chatInitialization){
+    @RequestMapping(value="/api/v1/private-chat/chat", method=RequestMethod.PUT, produces="application/json", consumes="application/json")
+    public ResponseEntity<String> establishChatChannel(@RequestBody ChatInitializationDTO chatInitialization){
         var chat = chatService.establishChatSession(chatInitialization);
         ChatDto chatDto=new ChatDto(chat.getId(),chat.getUserIdOne(),chat.getUserIdTwo());
-        return chatDto;
+        return JSONResponseHelper.createResponse(chatDto, HttpStatus.OK);
     }
-    @GetMapping("private-chat/{chatId}")
-    public List<Message> getExistingChatMessages(@PathVariable("chatId") UUID chatId) {
-        return messageService.getExistingChatMessages(chatId);
+    @RequestMapping(value="/api/v1/private-chat/chat/{chatId}", method=RequestMethod.GET, produces="application/json")
+    public ResponseEntity<String> getExistingChatMessages(@PathVariable("chatId") UUID chatId) {
+        List<Message> messages=messageService.getExistingChatMessages(chatId);
+        return JSONResponseHelper.createResponse(messages, HttpStatus.OK);
     }
 
 

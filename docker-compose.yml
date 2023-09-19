@@ -10,7 +10,7 @@ services:
     image: postgres:15.3
     container_name: who_users_db
     ports:
-      - "5433:5432"
+      - "5432:5432"
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=root
@@ -34,6 +34,14 @@ services:
       - ./create_who_message_db.sql:/docker-entrypoint-initdb.d/create_who_message_db.sql
     restart: always
 
+  rabbitmq:
+    image: rabbitmq:latest
+    ports:
+      - 15671:15672
+      - 61613:61613
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=root
 
   discovery-service:
     container_name: discovery-service

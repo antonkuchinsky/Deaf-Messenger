@@ -8,4 +8,9 @@ spring:
     url: jdbc:postgresql://127.0.0.1:5432/who_message_db
     username: admin
     password: root
+  rabbitmq:
+    host: 127.0.0.1
+    port: 15672
+    username: admin
+    password: root
 

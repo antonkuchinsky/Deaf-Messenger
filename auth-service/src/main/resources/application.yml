@@ -1,0 +1,36 @@
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: auth-service
+  config:
+    import: optional:configserver:instead
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5480/user_db
+    username: admin
+    password: root
+
+
+  flyway:
+    locations: classpath:db/migration
+
+server:
+  port: 8010
+
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+zipkin:
+  tracing:
+    endpoint: http://zipkin:9411/api/v2/spans
+
+

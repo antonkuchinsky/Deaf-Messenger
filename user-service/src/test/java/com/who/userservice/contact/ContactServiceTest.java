@@ -13,12 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
+
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -54,10 +55,7 @@ public class ContactServiceTest {
         contact1.setIsBlocked(isBlocked);
         contacts.add(contact1);
 
-        when(contactsRepository.getAllContactByUserIdAndIsBlocked(userId, isBlocked, contactCategory))
-                .thenReturn(contacts);
-
-        when(contactMapperDto.apply(contact1)).thenReturn(
+        Slice<ContactsResponseDto> expectedSlice = new SliceImpl<>(Collections.singletonList(
                 new ContactsResponseDto(
                         contact1.getContact().getId(),
                         contact1.getContactName(),
@@ -65,14 +63,18 @@ public class ContactServiceTest {
                         contact1.getContact().getLastActive(),
                         contactCategory,
                         contact1.getIsBlocked()
-                ));
+                )
+        ));
 
-        List<ContactsResponseDto> result = contactsService.getAllContacts(userId, isBlocked, contactCategory);
+        //when(contactsRepository.getAllContactByUserIdAndIsBlocked(userId, isBlocked, contactCategory, PageRequest.of(0, 10)))
+                //.thenReturn(expectedSlice);
+
+        Slice<ContactsResponseDto> result = contactsService.getAllContacts(userId, isBlocked, contactCategory, PageRequest.of(0, 10));
 
         assertNotNull(result);
-        assertEquals(1, result.size());
+        assertEquals(1, result.getContent().size());
 
-        ContactsResponseDto resultDto = result.get(0);
+        ContactsResponseDto resultDto = result.getContent().get(0);
         assertEquals(contact1.getContact().getId(), resultDto.contactsId());
         assertEquals(contact1.getContactName(), resultDto.contactsName());
         assertEquals(contact1.getContact().getIsActive(), resultDto.isActive());
@@ -81,8 +83,7 @@ public class ContactServiceTest {
         assertEquals(contact1.getIsBlocked(), resultDto.isBlocked());
 
         verify(contactsRepository, times(1))
-                .getAllContactByUserIdAndIsBlocked(userId, isBlocked, contactCategory);
-        verify(contactMapperDto, times(1)).apply(contact1);
+                .getAllContactByUserIdAndIsBlocked(userId, isBlocked, contactCategory, PageRequest.of(0, 10));
     }
 
     @Test

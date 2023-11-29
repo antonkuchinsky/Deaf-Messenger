@@ -1,10 +1,5 @@
 version: "3.9"
 services:
-  zipkin:
-    container_name: zipkin
-    image: openzipkin/zipkin
-    ports:
-      - "9411:9411"
 
   postgres_users:
     image: postgres:15.3
@@ -34,6 +29,27 @@ services:
       - ./create_who_message_db.sql:/docker-entrypoint-initdb.d/create_who_message_db.sql
     restart: always
 
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin:2.24.3
+    ports:
+      - "9411:9411"
+
+  grafana:
+    image: grafana/grafana-oss:8.5.2
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    links:
+      - prometheus:prometheus
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=root
+
+
   discovery-service:
     container_name: discovery-service
     build:
@@ -55,22 +71,41 @@ services:
       - discovery-service
       - zipkin
 
+  users-service:
+    container_name: users-service
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    ports:
+      - "8070:8070"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - postgres_users
+      - discovery-service
+      - gateway-service
+      - zipkin
 
-#  user-service:
-#    container_name: users-service
-#    build:
-#      context: ./users-service
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8070:8070"
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=docker
-#    depends_on:
-#      - discovery-service
-#      - gateway-service
-#      - zipkin
+  prometheus:
+    image: prom/prometheus:v2.37.1
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - users-service
+      - gateway-service
 
-
+  keycloak:
+    image: jboss/keycloak:16.1.1
+    restart: always
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    ports:
+      - "8080:8080"
 
 volumes:
   postgres_users:

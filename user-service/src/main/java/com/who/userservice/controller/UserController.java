@@ -1,28 +1,27 @@
 package com.who.userservice.controller;
-
 import com.who.userservice.dto.ContactsRequestDto;
-import com.who.userservice.dto.ContactsResponseDto;
-import com.who.userservice.entity.ContactCategory;
+import com.who.userservice.dto.UserRequestDto;
 import com.who.userservice.entity.User;
-import com.who.userservice.service.ContactsService;
 import com.who.userservice.service.UserService;
 import jakarta.validation.Valid;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.http.HttpStatus;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/users")
 public class UserController {
-    private final ContactsService contactsService;
     private final UserService userService;
 
-    public UserController(ContactsService contactsService, UserService userService) {
-        this.contactsService = contactsService;
+    public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @PostMapping("/create")
+    public User createUser(@RequestBody @NotNull @Valid UserRequestDto userRequestDto) {
+        return userService.createUser(userRequestDto);
     }
 
     @GetMapping("/{user_id}")
@@ -33,51 +32,8 @@ public class UserController {
     @PatchMapping("/{user_id}")
     public User updateUsername(@PathVariable("user_id") UUID id,
                                @RequestBody @NotNull @Valid ContactsRequestDto contactsRequestDto) {
-        var user = userService.getUserById(id);
-        return userService.updateUsername(user, contactsRequestDto.username());
+
+        return userService.updateUsername(userService.getUserById(id), contactsRequestDto.username());
     }
-
-
-    @GetMapping("/{user_id}/contacts")
-    public List<ContactsResponseDto> getAllContacts(@PathVariable("user_id") UUID id,
-                                                    @RequestParam(value = "is_blocked", defaultValue = "false") Boolean isBlocked,
-                                                    @RequestParam(value = "contact_category", required = false) ContactCategory contactCategory) {
-        return contactsService.getAllContacts(id, isBlocked, contactCategory);
-    }
-
-    @GetMapping("/{user_id}/contacts/{contact_id}")
-    public ContactsResponseDto getAllContacts(@PathVariable("user_id") UUID userId,
-                                              @PathVariable("contact_id") UUID contactId) {
-        return contactsService.getContactByContactIdAndUserId(userId, contactId);
-    }
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{user_id}/contacts/{contact_id}")
-    public void deleteContact(@PathVariable("user_id") UUID userId,
-                              @PathVariable("contact_id") UUID contactId) {
-        contactsService.deleteContact(userId, contactId);
-    }
-
-    @PatchMapping("/{user_id}/contacts/{contact_id}/category/edit")
-    public ContactsResponseDto updateContactCategory(@PathVariable("user_id") UUID userId,
-                                                     @PathVariable("contact_id") UUID contactId,
-                                                     @RequestBody @NotNull @Valid ContactsRequestDto contactsRequestDto) {
-        return contactsService.updateContactCategory(userId,contactId, contactsRequestDto.contactCategory());
-    }
-
-    @PatchMapping("/{user_id}/contacts/{contact_id}/name/edit")
-    public ContactsResponseDto updateContactName(@PathVariable("user_id") UUID userId,
-                                                 @PathVariable("contact_id") UUID contactId,
-                                                 @RequestBody @NotNull @Valid ContactsRequestDto contactsRequestDto) {
-        return contactsService.updateContactName(userId,contactId, contactsRequestDto.username());
-    }
-
-    @PatchMapping("/{user_id}/contacts/{contact_id}/block")
-    public ContactsResponseDto updateContactsBlock(@PathVariable("user_id") UUID userId,
-                                                   @PathVariable("contact_id") UUID contactId,
-                                                   @RequestBody @NotNull @Valid ContactsRequestDto contactsRequestDto) {
-        return contactsService.blockOrUnblockContact(userId,contactId, contactsRequestDto.isBlocked());
-    }
-
 
 }

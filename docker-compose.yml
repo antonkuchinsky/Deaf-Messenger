@@ -1,4 +1,9 @@
 version: "3.9"
+networks:
+  kafka-net:
+    name: kafka-net
+    driver: bridge
+
 services:
 
   postgres_users:
@@ -15,6 +20,22 @@ services:
       - ./create_who_users_db.sql:/docker-entrypoint-initdb.d/create_who_users_db.sql
     restart: always
 
+  postgres_user:
+    image: postgres:15.3
+    container_name: user_db
+    ports:
+      - "5480:5480"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=user_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./created_user_db.sql:/docker-entrypoint-initdb.d/create_user_db.sql
+    networks:
+      - postgres_user
+    restart: always
+
   postgres_message:
     image: postgres:15.3
     container_name: who_message_db
@@ -28,27 +49,6 @@ services:
       - postgres_message:/data/postgres_message
       - ./create_who_message_db.sql:/docker-entrypoint-initdb.d/create_who_message_db.sql
     restart: always
-
-  zipkin:
-    container_name: zipkin
-    image: openzipkin/zipkin:2.24.3
-    ports:
-      - "9411:9411"
-
-  grafana:
-    image: grafana/grafana-oss:8.5.2
-    container_name: grafana
-    restart: always
-    ports:
-      - "3000:3000"
-    links:
-      - prometheus:prometheus
-    volumes:
-      - ./grafana:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=root
-
 
   discovery-service:
     container_name: discovery-service
@@ -110,3 +110,4 @@ services:
 volumes:
   postgres_users:
   postgres_message:
+  pgdata:

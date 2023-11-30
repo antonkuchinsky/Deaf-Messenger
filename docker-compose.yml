@@ -22,7 +22,7 @@ services:
       - POSTGRES_DB=who_users_db
     volumes:
       - postgres_users:/data/postgres_users
-      - ./create_who_users_db.sql:/docker-entrypoint-initdb.d/create_who_users_db.sql
+      - ./scripts-sql/create_who_users_db.sql:/docker-entrypoint-initdb.d/create_who_users_db.sql
     restart: always
 
   postgres_user:
@@ -36,7 +36,7 @@ services:
       - POSTGRES_DB=user_db
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./created_user_db.sql:/docker-entrypoint-initdb.d/create_user_db.sql
+      - ./scripts-sql/created_user_db.sql:/docker-entrypoint-initdb.d/create_user_db.sql
     networks:
       - postgres_user
     restart: always
@@ -52,8 +52,34 @@ services:
       - POSTGRES_DB=who_message_db
     volumes:
       - postgres_message:/data/postgres_message
-      - ./create_who_message_db.sql:/docker-entrypoint-initdb.d/create_who_message_db.sql
+      - ./scripts-sql/create_who_message_db.sql:/docker-entrypoint-initdb.d/create_who_message_db.sql
     restart: always
+
+  grafana:
+    image: grafana/grafana-oss:8.5.2
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    links:
+      - prometheus:prometheus
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=root
+
+  prometheus:
+    image: prom/prometheus:v2.37.1
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - users-service
+      - gateway-service
 
   zookeeper:
     image: zookeeper:3.7.0

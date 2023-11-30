@@ -7,10 +7,11 @@ import com.who.userservice.exception.InvalidDataException;
 import com.who.userservice.mapper.ContactMapperDto;
 import com.who.userservice.repository.ContactsRepository;
 import com.who.userservice.service.ContactsService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,11 +26,14 @@ public class ContactsServiceImpl implements ContactsService {
     }
 
     @Override
-    public List<ContactsResponseDto> getAllContacts(UUID userId, Boolean isBlocked, ContactCategory contactCategory) {
-        return contactsRepository.getAllContactByUserIdAndIsBlocked(userId, isBlocked, contactCategory)
-                .stream()
-                .map(contactMapperDto)
-                .toList();
+    public Slice<ContactsResponseDto> getAllContacts(UUID userId,
+                                                     Boolean isBlocked,
+                                                     ContactCategory contactCategory,
+                                                     Pageable pageable) {
+
+        return contactsRepository.getAllContactByUserIdAndIsBlocked
+                        (userId, isBlocked, contactCategory, pageable)
+                .map(contactMapperDto);
     }
 
     public ContactsResponseDto updateContact(Contact contact) {

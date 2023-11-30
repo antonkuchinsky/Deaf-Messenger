@@ -1,5 +1,6 @@
 package ru.spellsofenglish.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +19,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public String addNewUser(@RequestBody User user){
+    public String addNewUser(@RequestBody User user) throws JsonProcessingException {
         return userService.createNewUser(user);
     }
 

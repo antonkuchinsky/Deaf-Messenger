@@ -15,6 +15,10 @@ spring:
     url: jdbc:postgresql://localhost:5480/user_db
     username: admin
     password: root
+  kafka:
+    bootstrap-servers: localhost:9092
+    topic:
+      name: t.user.reg
 
 
   flyway:

@@ -8,4 +8,10 @@ spring:
     url: jdbc:postgresql://127.0.0.1:5432/who_users_db
     username: admin
     password: root
+  kafka:
+    consumer:
+      group-id: "default"
+
+topic:
+  name: t.user.reg
 

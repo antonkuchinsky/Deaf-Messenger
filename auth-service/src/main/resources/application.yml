@@ -17,8 +17,9 @@ spring:
     password: root
   kafka:
     bootstrap-servers: localhost:9092
-    topic:
-      name: t.user.reg
+    
+topic:
+  name: t.user.reg
 
 
   flyway:

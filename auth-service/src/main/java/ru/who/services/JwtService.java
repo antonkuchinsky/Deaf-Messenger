@@ -1,4 +1,4 @@
-package ru.spellsofenglish.services;
+package ru.who.services;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

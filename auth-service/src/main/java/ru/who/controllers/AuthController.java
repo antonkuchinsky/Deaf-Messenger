@@ -1,14 +1,14 @@
-package ru.spellsofenglish.controllers;
+package ru.who.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import ru.spellsofenglish.dto.AuthRequest;
-import ru.spellsofenglish.exceptions.InvalidDataException;
-import ru.spellsofenglish.models.User;
-import ru.spellsofenglish.services.UserService;
+import ru.who.dto.AuthRequest;
+import ru.who.exceptions.InvalidDataException;
+import ru.who.models.User;
+import ru.who.services.UserService;
 
 
 @RequiredArgsConstructor

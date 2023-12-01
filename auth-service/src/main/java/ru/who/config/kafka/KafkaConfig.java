@@ -1,4 +1,4 @@
-package ru.spellsofenglish.config.kafka;
+package ru.who.config.kafka;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.admin.NewTopic;

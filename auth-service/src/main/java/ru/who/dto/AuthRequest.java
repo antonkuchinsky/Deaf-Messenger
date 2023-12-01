@@ -1,4 +1,4 @@
-package ru.spellsofenglish.dto;
+package ru.who.dto;
 
 import java.util.UUID;
 

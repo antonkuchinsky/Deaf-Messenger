@@ -1,8 +1,8 @@
-package ru.spellsofenglish.mapper;
+package ru.who.mapper;
 
 import org.springframework.stereotype.Service;
-import ru.spellsofenglish.dto.UserDto;
-import ru.spellsofenglish.models.User;
+import ru.who.dto.UserDto;
+import ru.who.models.User;
 
 import java.util.function.Function;
 

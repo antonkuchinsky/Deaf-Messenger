@@ -1,8 +1,8 @@
-package ru.spellsofenglish.config.security;
+package ru.who.config.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.spellsofenglish.models.User;
+import ru.who.models.User;
 
 import java.util.Collection;
 

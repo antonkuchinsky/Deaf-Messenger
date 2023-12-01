@@ -1,4 +1,4 @@
-package ru.spellsofenglish.exceptions;
+package ru.who.exceptions;
 
 public class UserExistsException extends RuntimeException {
     private final String title;

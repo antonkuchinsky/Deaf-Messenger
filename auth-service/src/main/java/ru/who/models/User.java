@@ -1,4 +1,4 @@
-package ru.spellsofenglish.models;
+package ru.who.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;

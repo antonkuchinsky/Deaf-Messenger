@@ -1,4 +1,4 @@
-package ru.spellsofenglish;
+package ru.who;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,5 +1,6 @@
 package com.who.messageservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.who.messageservice.dto.ChatDto;
 import com.who.messageservice.dto.ChatInitializationDTO;
 import com.who.messageservice.dto.MessageDto;
@@ -31,7 +32,7 @@ public class ChatController {
     @MessageMapping("/chat.{chatId}")
     @SendTo("/topic/chat.{chatId}")
     public MessageDto sendMessage(@DestinationVariable UUID chatId,
-                               MessageDto message){
+                               MessageDto message) throws JsonProcessingException {
         messageService.sendMessage(message);
         return message;
     }

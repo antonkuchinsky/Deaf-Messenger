@@ -1,7 +1,8 @@
 # Deaf-Messenger
 ### The deaf-messenger is a project for one-on-one correspondence
 The project utilizes various technologies including:
-> Java 17, Spring Boot, Gradle, PostgreSQL, Spring Data JPA, Zipkin, Eureka Server, JWT, REST, Flyway, Docker, Junit, Kafka, WebSockets, Grafana, .
+> Java 17, Spring Boot, Gradle, PostgreSQL, Spring Data JPA, Zipkin, Eureka Server, JWT, REST, Flyway, Docker, Junit, Kafka, WebSockets, Grafana.
+
 #Application architecture
 >![Image alt](https://github.com/antonkuchinsky/Deaf-Messenger/raw/main/image.png)
 # User Service

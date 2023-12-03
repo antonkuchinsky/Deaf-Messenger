@@ -20,5 +20,5 @@ User registration includes password encryption and the creation of user profiles
 The gateway service is responsible for distributing requests to the respective services.
 It filters requests and prevents unauthorized users from accessing the services.
 
-#Message Service
+# Message Service
 The message service implements the logic for sending messages to users using WebSockets, creating chats between users, and retrieving a list of messages in a chat with pagination support.

@@ -3,7 +3,7 @@
 The project utilizes various technologies including:
 > Java 17, Spring Boot, Gradle, PostgreSQL, Spring Data JPA, Zipkin, Eureka Server, JWT, REST, Flyway, Docker, Junit, Kafka, WebSockets, Grafana.
 
-###Application architecture
+# Application architecture
 >![Image alt](https://github.com/antonkuchinsky/Deaf-Messenger/raw/main/image.png)
 # User Service
 The user service implements the logic for adding a user profile after user registration using a Kafka listener, updating user profiles, and adding user contacts with storage and pagination support.
